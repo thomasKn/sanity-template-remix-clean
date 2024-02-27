@@ -7,6 +7,7 @@ import { urlFor } from '~/sanity/image'
 import { loadQuery } from '~/sanity/loader.server'
 import { POST_QUERY } from '~/sanity/queries'
 import { Post } from '~/sanity/types'
+import { useMemo } from 'react'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const initial = await loadQuery<Post>(POST_QUERY, params)
@@ -29,6 +30,25 @@ export default function PostRoute() {
     return <div>Loading...</div>
   }
 
+  const Components = useMemo(
+    () => ({
+      types: {
+        image: (props: { value: any }) => {
+          return (
+            props.value.asset && (
+              <img
+                style={{ maxWidth: '100%' }}
+                src={urlFor(props.value.asset).url()}
+                alt=""
+              />
+            )
+          )
+        },
+      },
+    }),
+    [],
+  )
+
   return (
     <section data-sanity={encodeDataAttribute('slug')} className="post">
       {data?.mainImage ? (
@@ -49,7 +69,7 @@ export default function PostRoute() {
         )}
         {data?.body && (
           <div className="post__content">
-            <PortableText value={data.body} />
+            <PortableText value={data.body} components={Components} />
           </div>
         )}
       </div>
