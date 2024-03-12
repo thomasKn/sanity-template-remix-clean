@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'post',
@@ -25,6 +25,31 @@ export default defineType({
       title: 'Excerpt',
       type: 'text',
       rows: 4,
+    }),
+    defineField({
+      name: 'sections',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          name: 'sectionRichtext',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'title',
+              type: 'string',
+            }),
+            defineField({
+              name: 'body',
+              type: 'blockContent',
+            }),
+          ],
+          // of: [
+          //   defineArrayMember({
+          //     type: 'block',
+          //   }),
+          // ],
+        }),
+      ],
     }),
     defineField({
       name: 'mainImage',
